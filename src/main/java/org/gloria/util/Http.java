@@ -19,8 +19,12 @@ import java.nio.charset.Charset;
 /**
  * Create on 2017/3/8 15:24.
  *
+ * http 处理封装
+ * 
+ * 
  * @author : gloria.
  */
+//TODO 规范异常处理
 public class Http {
 
     private static CloseableHttpClient client;
@@ -42,8 +46,18 @@ public class Http {
         }
         return this;
     }
-    
 
+
+    /**
+     * get请求
+     * @param url       
+     *      待请求的链接
+     * @param charset
+     *      目标页面字符集
+     * @return
+     *      链接对应返回的内容
+     * @throws IOException
+     */
     public static String doGet(String url, String charset) throws IOException {
         new Http().httpClient().httpGet(url);
         response = client.execute(httpGet);
