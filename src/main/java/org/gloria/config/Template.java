@@ -22,11 +22,11 @@ public class Template {
     public Template() {
     }
 
-    public Template me() {
+    public static Template me() {
         return new Template();
     }
 
-    public Template me(Type type, String expression) {
+    public static Template me(Type type, String expression) {
         return new Template().type(type).expression(expression);
     }
 
