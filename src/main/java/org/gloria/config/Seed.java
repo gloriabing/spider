@@ -24,12 +24,15 @@ public class Seed {
      * 请求头信息
      */
     private static Map<String, String> headers;
-    
+
     private static final Integer DEFAULT_RETRY = 3;
+    private static final Integer DEFAULT_THREAD = 1;
+
+    private static Integer thread;
     
     
     public static Seed me() {
-        return new Seed();
+        return new Seed().thread(DEFAULT_THREAD);
     }
 
     public static Seed me(String url) {
@@ -60,11 +63,24 @@ public class Seed {
         return this;
     }
 
+    public Seed thread(Integer thread) {
+        this.thread = thread;
+        return this;
+    }
+
     public String url() {
         return this.url;
     }
 
     public Integer retry() {
         return this.retry;
+    }
+    
+    public Map<String, String> headers() {
+        return this.headers;
+    }
+    
+    public Integer thread() {
+        return this.thread;
     }
 }
