@@ -15,6 +15,8 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Create on 2017/3/8 15:24.
@@ -47,19 +49,25 @@ public class Http {
         return this;
     }
 
-
     /**
      * get请求
-     * @param url       
+     * @param url
      *      待请求的链接
      * @param charset
      *      目标页面字符集
+     * @param headers
+     *      指定请求头信息
      * @return
      *      链接对应返回的内容
      * @throws IOException
      */
-    public static String doGet(String url, String charset) throws IOException {
+    public static String doGet(String url, String charset, Map<String, String> headers) throws IOException {
         new Http().httpClient().httpGet(url);
+        if (headers != null && !headers.isEmpty()) {
+            for (String key : headers.keySet()) {
+                httpGet.addHeader(key, headers.get(key));
+            }
+        }
         response = client.execute(httpGet);
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             HttpEntity entity = response.getEntity();
@@ -77,7 +85,21 @@ public class Http {
         }
         return null;
     }
-    
+
+    /**
+     * get请求
+     * @param url
+     *      待请求的链接
+     * @param charset
+     *      目标页面字符集
+     * @return
+     *      链接对应返回的内容
+     * @throws IOException
+     */
+    public static String doGet(String url, String charset) throws IOException {
+        return doGet(url, charset, new HashMap<>());
+    }
+
     public static String doGet(String url) throws IOException {
         return doGet(url, null);
     }
