@@ -13,9 +13,9 @@ import java.util.concurrent.Executors;
 
 /**
  * Create on 2017/3/9 15:45.
- *
+ * <p>
  * 调度器
- * 
+ *
  * @author : gloria.
  */
 public class Scheduler {
@@ -23,7 +23,7 @@ public class Scheduler {
 
     private ISpider spider;
     private Seed seed;
-    private ExecutorService executor;
+    private static ExecutorService executor;
 
     public Scheduler(String url, ISpider spider) {
         this.spider = spider;
@@ -39,7 +39,7 @@ public class Scheduler {
         //将url放入队列中
         UrlManager.push(url);
         this.seed.url(url);
-        
+
         //根据配置创建对应大小的线程池
         int thread = seed.thread();
         executor = Executors.newFixedThreadPool(thread);
@@ -47,14 +47,47 @@ public class Scheduler {
 
     //run
     public void running() {
-        
+
         while (UrlManager.isNotEmpty()) {
+            if (spider.shutdown()) {
+                shutdown();
+                break;
+            }
             CrawlUrl url = UrlManager.pop();
             Runnable runnable = new Crawl(this.seed, this.spider, url);
             executor.execute(runnable);
 
         }
-        
+        waitForStop();
+
+    }
+
+    //wait for stop
+    public void waitForStop() {
+        while (true) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (UrlManager.isNotEmpty()) {
+                running();
+                break;
+            } 
+        }
+
     }
     
+    //停止调度
+    public static void shutdown() {
+
+        if (!executor.isShutdown()) {
+            //关闭线程池
+            executor.shutdown();
+            LOG.info("finished !");
+            System.exit(0);
+        }
+        
+    }
+
 }
