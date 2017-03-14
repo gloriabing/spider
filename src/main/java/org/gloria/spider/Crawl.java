@@ -49,18 +49,17 @@ public class Crawl implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Response response = new Response(seed);
-        response.body(body);
+        Response response = Response.me().body(body);
 
-        //解析当前页面内容
-        spider.parse(response);
-        
         //发现更多内容
+
         List<String> moreUrls = spider.discoverMore(response);
         if (moreUrls != null && !moreUrls.isEmpty()) {
             UrlManager.batchPush(moreUrls);
         }
-        
+
+        //解析当前页面内容
+        spider.parse(response);
     }
 
 }
