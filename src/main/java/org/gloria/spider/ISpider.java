@@ -33,4 +33,10 @@ public interface ISpider {
      */
     List<String> discoverMore(Response response);
 
+    /**
+     * 停止爬虫
+     * @return
+     */
+    boolean shutdown();
+
 }
