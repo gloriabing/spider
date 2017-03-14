@@ -13,6 +13,10 @@ public class Response {
 
     private static String body;
     private Template template;
+
+    public static Response me() {
+        return new Response();
+    }
     
     public Response body(String body) {
         this.body = body;
