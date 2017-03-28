@@ -50,9 +50,11 @@ public class Crawl implements Runnable {
             e.printStackTrace();
         }
         Response response = Response.me().body(body);
+        response.url(url);
 
         //解析当前页面内容
         spider.parse(response);
+
         
         //发现更多内容
         List<String> moreUrls = spider.discoverMore(response);
