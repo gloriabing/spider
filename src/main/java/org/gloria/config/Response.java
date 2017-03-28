@@ -11,6 +11,7 @@ import org.jsoup.select.Elements;
  */
 public class Response {
 
+    private static String url;
     private static String body;
     private Template template;
 
@@ -25,6 +26,15 @@ public class Response {
 
     public String body() {
         return this.body();
+    }
+
+    public Response url(String url) {
+        this.url = url;
+        return this;
+    }
+    
+    public String url() {
+        return this.url;
     }
 
     public Response template(Template template) {
