@@ -43,9 +43,7 @@ public class Http {
     }
 
     private Http httpGet(String url) {
-        if (httpGet == null) {
-            httpGet = new HttpGet(url);
-        }
+        httpGet = new HttpGet(url);
         return this;
     }
 
