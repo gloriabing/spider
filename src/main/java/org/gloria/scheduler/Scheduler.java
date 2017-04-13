@@ -8,6 +8,7 @@ import org.gloria.spider.ISpider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,12 +35,42 @@ public class Scheduler {
         init(url);
     }
 
+    public Scheduler(List<String> urlList, ISpider spider) {
+        this.spider = spider;
+        this.seed = spider.init();
+        if (this.seed == null) {
+            this.seed = Seed.me();
+        }
+        init(urlList);
+        
+    }
+
+    public Scheduler(ISpider spider) {
+        this.spider = spider;
+        if (this.seed == null) {
+            this.seed = Seed.me();
+        }
+        init();
+    }
+
     //init
     public void init(String url) {
         //将url放入队列中
         UrlManager.push(url);
-        this.seed.url(url);
 
+        init();
+    }
+
+    public void init(List<String> urls) {
+        //将url放入队列中
+        for (String url : urls) {
+            UrlManager.push(url);
+        }
+
+        init();
+    }
+
+    public void init() {
         //根据配置创建对应大小的线程池
         int thread = seed.thread();
         executor = Executors.newFixedThreadPool(thread);
@@ -56,7 +87,11 @@ public class Scheduler {
             CrawlUrl url = UrlManager.pop();
             Runnable runnable = new Crawl(this.seed, this.spider, url);
             executor.execute(runnable);
-
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         waitForStop();
 
